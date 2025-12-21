@@ -1,10 +1,10 @@
 import axios from "axios";
 import { getAuthToken } from "../config";
 
-export const activateCard = async (username: string, redirectUrl: string) => {
+export const activateCard = async (cardId: string, redirectUrl: string) => {
   const authToken = await getAuthToken();
   const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/card/activate`, {
-    username,
+    cardId,
     redirectUrl,
   }, {
     headers: {
