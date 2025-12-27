@@ -1,9 +1,22 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePrivy } from "@privy-io/react-auth";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { login, authenticated, ready } = usePrivy();
+
+  useEffect(() => {
+    // If user is already authenticated, redirect to dashboard
+    if (authenticated && ready) {
+      navigate("/dashboard");
+    }
+  }, [authenticated, ready, navigate]);
+
+  const handleLogin = () => {
+    login();
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -33,7 +46,7 @@ const LandingPage = () => {
           {/* Desktop Buttons */}
           <div className="hidden items-center gap-3 md:flex">
             <button
-              onClick={() => navigate("/activate")}
+              onClick={handleLogin}
               className="rounded-md border-2 border-[#d4af37] px-5 py-2 text-sm font-semibold text-[#d4af37] transition-all hover:bg-[#d4af37] hover:text-black"
             >
               Log In
@@ -91,7 +104,7 @@ const LandingPage = () => {
               </a>
               <a 
                 href="#login" 
-                onClick={() => { navigate("/activate"); setIsMobileMenuOpen(false); }} 
+                onClick={() => { handleLogin(); setIsMobileMenuOpen(false); }} 
                 className="border-b border-gray-100 px-4 py-4 text-base font-medium text-gray-900 transition-colors hover:bg-gray-50 cursor-pointer"
               >
                 Sign Up/Log In

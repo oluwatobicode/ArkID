@@ -6,6 +6,7 @@ import PaymentCallback from "./pages/PaymentCallback";
 import CardActivate from "./pages/CardActiviate";
 import CardNotActivatedPage from "./pages/CardNotActivated";
 import Dashboard from "./pages/Dashboard";
+import ScanPage from "./pages/ScanPage";
 import Preloader from "./components/Preloader";
 import { PrivyProvider } from "@privy-io/react-auth";
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/activate" element={<CardActivate />} />
           <Route path="/not-activated" element={<CardNotActivatedPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/scan/:username" element={<ScanPage />} />
         </Routes>
       </BrowserRouter>
     </PrivyProvider>

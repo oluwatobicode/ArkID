@@ -1,7 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { updateRedirectUrl } from "../services/api/updateRedirectUrl";
 
-const RedirectSection = () => {
+interface RedirectSectionProps {
+  currentUrl?: string | null;
+}
+
+const RedirectSection = ({ currentUrl }: RedirectSectionProps) => {
   const [enabled, setEnabled] = useState(true);
+  const [redirectUrl, setRedirectUrl] = useState(currentUrl || "");
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  useEffect(() => {
+    setRedirectUrl(currentUrl || "");
+  }, [currentUrl]);
+
+  const handleUpdateRedirect = async () => {
+    if (!redirectUrl.trim()) return;
+
+    setIsUpdating(true);
+    setMessage(null);
+
+    try {
+      const response = await updateRedirectUrl(redirectUrl);
+      if (response.success) {
+        setMessage({ text: "Redirect URL updated successfully!", type: 'success' });
+      } else {
+        setMessage({ text: response.message || "Failed to update redirect URL", type: 'error' });
+      }
+    } catch (error) {
+      console.error("Error updating redirect URL:", error);
+      setMessage({ text: "Failed to update redirect URL", type: 'error' });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   return (
     <div className="mt-6 border-b border-[#2F2F32] pb-8">
@@ -30,13 +63,25 @@ const RedirectSection = () => {
         <p className="text-xs text-[#A1A1AA]">Your Redirect URL</p>
 
         <input
-          type="text"
-          defaultValue="https://ark-id.com/john_doe-24"
+          type="url"
+          value={redirectUrl}
+          onChange={(e) => setRedirectUrl(e.target.value)}
+          placeholder="https://your-website.com"
           className="w-full rounded-[12px] border border-[#2F2F32] bg-[#18181B] p-4 text-white placeholder-gray-500 focus:border-[#D4AF37] focus:outline-none"
         />
 
-        <button className="mt-2 rounded-[12px] bg-[#D4AF37] px-6 py-3 text-sm font-bold text-black hover:bg-[#b8952b]">
-          Save Redirect Link
+        {message && (
+          <div className={`text-sm ${message.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+            {message.text}
+          </div>
+        )}
+
+        <button 
+          onClick={handleUpdateRedirect}
+          disabled={isUpdating || !redirectUrl.trim()}
+          className="mt-2 rounded-[12px] bg-[#D4AF37] px-6 py-3 text-sm font-bold text-black hover:bg-[#b8952b] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isUpdating ? "Updating..." : "Save Redirect Link"}
         </button>
       </div>
     </div>
