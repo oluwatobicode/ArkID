@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const activateSchema = z.object({
@@ -24,26 +24,23 @@ const ActivateCard = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<ActivateFormData>({
     resolver: zodResolver(activateSchema),
     mode: "onBlur",
   });
 
-  const watchedUsername = watch("username");
-
   const navigate = useNavigate();
 
   const onSubmit = async (data: ActivateFormData) => {
     // try {
     //   const response = await axios.post("http://localhost:3000/activate", data);
-
     //   console.log(response);
     //   setSuccess(true);
     // } catch (error) {
     //   console.error(error);
     // }
+
     console.log(data);
     setSuccess(true);
     navigate("/dashboard");
@@ -58,7 +55,7 @@ const ActivateCard = () => {
 
         <div className="w-full max-w-[400px] rounded-[24px] bg-white p-6 shadow-2xl md:p-8">
           <div className="space-y-6">
-            <div className="text-center space-y-2">
+            <div className="space-y-2 text-center">
               <h1 className="text-[24px] font-bold leading-tight tracking-tight text-gray-900">
                 Activate Your Ark<span className="text-[#d4af37]">ID</span> Card
               </h1>
@@ -68,9 +65,9 @@ const ActivateCard = () => {
             </div>
 
             {success ? (
-              <div className="rounded-lg bg-green-50 p-4 text-center text-green-800 border border-green-200">
+              <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-center text-green-800">
                 <p className="font-bold">Card Activated Successfully!</p>
-                <p className="text-sm mt-1">Your profile is live.</p>
+                <p className="mt-1 text-sm">Your profile is live.</p>
               </div>
             ) : (
               <form
@@ -89,15 +86,14 @@ const ActivateCard = () => {
                     type="text"
                     id="username"
                     placeholder="e.g. john_doe"
-                    className={`w-full rounded-[8px] border-2 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white
-                      ${
-                        errors.username
-                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                          : "border-[#EDF0F7] focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37]"
-                      }`}
+                    className={`w-full rounded-[8px] border-2 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white ${
+                      errors.username
+                        ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        : "border-[#EDF0F7] focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37]"
+                    }`}
                   />
                   {errors.username && (
-                    <p className="text-xs text-red-500 pl-1">
+                    <p className="pl-1 text-xs text-red-500">
                       {errors.username.message}
                     </p>
                   )}
@@ -115,22 +111,21 @@ const ActivateCard = () => {
                     type="url"
                     id="redirectUrl"
                     placeholder="https://website.com"
-                    className={`w-full rounded-[8px] border-2 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white
-                      ${
-                        errors.redirectUrl
-                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                          : "border-[#EDF0F7] focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37]"
-                      }`}
+                    className={`w-full rounded-[8px] border-2 bg-gray-50 px-4 py-3 text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white ${
+                      errors.redirectUrl
+                        ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        : "border-[#EDF0F7] focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37]"
+                    }`}
                   />
                   {errors.redirectUrl && (
-                    <p className="text-xs text-red-500 pl-1">
+                    <p className="pl-1 text-xs text-red-500">
                       {errors.redirectUrl.message}
                     </p>
                   )}
                 </div>
 
-                <div className="">
-                  <p className="text-[16px] text-black font-regular">
+                <div>
+                  <p className="text-[16px] font-regular text-black">
                     Card ID was sent to your email during purchase
                   </p>
                 </div>
@@ -140,13 +135,7 @@ const ActivateCard = () => {
                   disabled={isSubmitting}
                   className="w-full transform rounded-[10px] bg-[#d4af37] py-3.5 text-sm font-bold uppercase tracking-wide text-black transition-all hover:bg-[#c29f2f] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {isSubmitting ? (
-                    <span className="flex items-center justify-center gap-2">
-                      Activating...
-                    </span>
-                  ) : (
-                    "Activate Card"
-                  )}
+                  {isSubmitting ? "Activating..." : "Activate Card"}
                 </button>
               </form>
             )}
