@@ -44,8 +44,14 @@ const ScanPage = () => {
         
         if (response.success) {
           const data = response.data;
-          
-          // Navigate to dashboard with the card data
+
+          // If card is activated and has a redirect URL, redirect to it
+          if (data.isActivated && data.redirect_url) {
+            window.location.href = data.redirect_url;
+            return;
+          }
+
+          // Otherwise, navigate to dashboard with the card data
           // User can view and update redirect link from dashboard
           if (authenticated) {
             navigate("/dashboard", { state: { scannedCardData: data } });
