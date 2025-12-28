@@ -45,20 +45,13 @@ const ScanPage = () => {
         if (response.success) {
           const data = response.data;
           
-          // If card is activated and has redirect URL, redirect directly
-          if (data.isActivated && data.redirect_url) {
-            window.location.href = data.redirect_url;
-            return;
-          }
-          
-          // If not activated, check if user is authenticated
-          if (!data.isActivated) {
-            if (authenticated) {
-              navigate("/not-activated", { state: { cardData: data } });
-            } else {
-              // Show login prompt or redirect to not-activated page
-              navigate("/not-activated", { state: { cardData: data, needsAuth: true } });
-            }
+          // Navigate to dashboard with the card data
+          // User can view and update redirect link from dashboard
+          if (authenticated) {
+            navigate("/dashboard", { state: { scannedCardData: data } });
+          } else {
+            // If not authenticated, prompt to login first
+            navigate("/not-activated", { state: { cardData: data, needsAuth: true } });
           }
         } else {
           // Handle card not found - show not-activated page with username

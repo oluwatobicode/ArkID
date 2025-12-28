@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { usePrivy } from "@privy-io/react-auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ProfileForm from "../components/ProfileForm";
 import RedirectSection from "../components/RedirectSection";
 import StatCard from "../components/StatCard";
@@ -27,10 +27,14 @@ interface ApiResponse {
 const Dashboard = () => {
   const { authenticated, ready, logout, user } = usePrivy();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userCards, setUserCards] = useState<UserCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Get scanned card data from navigation state
+  const scannedCardData = location.state?.scannedCardData;
 
   useEffect(() => {
     if (!authenticated && ready) {
@@ -42,6 +46,27 @@ const Dashboard = () => {
       if (!authenticated) return;
       
       try {
+        // If scanned card data is available, use it instead of fetching
+        if (scannedCardData) {
+          console.log('Using scanned card data:', scannedCardData);
+          // Convert scanned card data to UserCard format
+          const cardData: UserCard = {
+            card_id: '', // Not provided in scan response
+            user_id: '', // Not provided in scan response
+            username: scannedCardData.username,
+            email: '', // Not provided in scan response
+            isActivated: scannedCardData.isActivated,
+            redirect_url: scannedCardData.redirect_url,
+            taps_count: scannedCardData.taps_count,
+            valid_redirects_count: 0, // Not provided in scan response
+            createdAt: '', // Not provided in scan response
+            updatedAt: '', // Not provided in scan response
+          };
+          setUserCards([cardData]);
+          setLoading(false);
+          return;
+        }
+        
         const response: ApiResponse = await getUserCards();
         if (response.success) {
           setUserCards(response.data);
@@ -59,7 +84,7 @@ const Dashboard = () => {
     if (authenticated) {
       fetchUserCards();
     }
-  }, [authenticated, ready, navigate]);
+  }, [authenticated, ready, navigate, scannedCardData]);
 
   const handleLogout = () => {
     logout();
