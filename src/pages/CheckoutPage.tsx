@@ -271,8 +271,8 @@ const CheckoutPage = () => {
           </div>
 
           <div className="mb-6 text-center">
-            <div className="flex items-center justify-center gap-3">
-              <div className="text-2xl font-bold text-gray-400 line-through md:text-3xl">₦30,000.00</div>
+            <div className="flex flex-col items-center justify-center gap-1">
+              <div className="text-xl font-bold text-gray-400 line-through md:text-2xl">₦30,000.00</div>
               <div className="text-4xl font-bold text-gray-900 md:text-5xl">₦25,000.00</div>
             </div>
           </div>

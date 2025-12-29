@@ -24,7 +24,7 @@ const LandingPage = () => {
       <header className="border-b border-gray-100 bg-white px-4 py-4 md:px-8">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <img 
-            src="/ArkID logo-1.png" 
+            src="/ArkID logob.png" 
             alt="ArkID Logo" 
             className="h-8 w-auto md:h-10 cursor-pointer" 
             onClick={() => navigate("/")}
